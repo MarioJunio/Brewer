@@ -1,0 +1,49 @@
+<input
+	type="hidden"
+	class="js-venda-total"
+	th:value="${{total}}" />
+
+<div
+	class="bw-tabela-cervejas__vazio"
+	th:if="${#lists.isEmpty(itens)}">
+	<i class="glyphicon  glyphicon-shopping-cart"></i> <span>Você ainda não adicionou nenhuma cerveja.</span>
+</div>
+
+<div
+	class="bw-tabela-item js-item-venda"
+	th:if="${not #lists.isEmpty(itens)}"
+	th:each="item : ${itens}">
+
+	<div class="bw-tabela-item__coluna  bw-tabela-item__coluna--foto">
+		<img
+			th:width="${item.cerveja.temFoto() ? '45px' : '25px'}"
+			th:src="@{/fotos/cerveja/thumbnail.{foto}(foto=${item.cerveja.foto})}"
+			class="img-responsive" />
+
+	</div>
+	<div class="bw-tabela-item__coluna  bw-tabela-item__coluna--detalhes">
+		<span class="bw-tabela-cerveja-nome">[[${item.cerveja.nome}]]</span> <span class="label  label-default">[[${item.cerveja.sku}]]</span> <span
+			class="bw-tabela-cerveja-origem">[[${item.cerveja.origem.descricao}]]</span>
+	</div>
+	<div class="bw-tabela-item__coluna  bw-tabela-item__coluna--valores">
+
+		<div class="bw-tabela-cerveja-valor-pequeno">
+			<input
+				type="text"
+				maxlength="3"
+				class="bw-tabela-cerveja-campo-quantidade js-decimal js-venda-item-quantidade"
+				data:cerveja_id="${item.cerveja.id}"
+				th:value="${item.quantidade}" /> x <span>R$ [[${{item.cerveja.valor}}]]</span>
+		</div>
+
+		<div class="bw-tabela-cerveja-valor-grande">R$ [[${{item.valorTotal}}]]</div>
+	</div>
+
+	<div class="bw-tabela-item__painel-exclusao">
+		<span class="bw-tabela-item__titulo-exclusao">Excluir este item da venda?</span>
+		<button
+			type="button"
+			data:cerveja-id="${item.cerveja.id}"
+			class="btn  btn-danger js-btn-excluir-item-venda">Sim, excluir!</button>
+	</div>
+</div>

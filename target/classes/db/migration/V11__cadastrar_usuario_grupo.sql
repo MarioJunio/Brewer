@@ -1,0 +1,1 @@
+insert into usuario_grupo(codigo_usuario, codigo_grupo) values (999, 1), (999, 2);

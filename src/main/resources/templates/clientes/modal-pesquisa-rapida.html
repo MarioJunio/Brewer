@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<div
+	class="modal  fade"
+	id="pesquisaRapidaClientes"
+	tabindex="-1"
+	role="dialog"
+	th:fragment="pesquisaRapidaClientes">
+
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button
+					type="button"
+					class="close"
+					data-dismiss="modal">
+					<i>&times;</i>
+				</button>
+				<h4 class="modal-title">Pesquisa de clientes</h4>
+			</div>
+
+			<div class="modal-body">
+
+				<div
+					class="alert  alert-danger  alert-dismissible js-alert-clientes-pesquisa-rapida hidden"
+					role="alert">
+					<button
+						type="button"
+						class="close"
+						data-dismiss="alert"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+						<div>
+							<i class="fa fa-exclamation-circle"></i> <span class="js-mensagem-erro-clientes-pesquisa-rapida">erro de validação</span>
+						</div>
+				</div>
+
+				<form
+					class="form js-form-pesquisa-rapida-cliente"
+					th:action="@{/clientes}"
+					method="GET">
+
+					<div class="form-group">
+						<label
+							class="control-label"
+							for="nome">Nome</label> <input
+							id="nome"
+							type="text"
+							autocomplete="off"
+							class="form-control js-input-nome"
+							autofocus="autofocus" />
+					</div>
+
+					<button
+						type="submit"
+						class="btn  btn-primary js-btn-pesquisa-rapida-cliente">Pesquisar</button>
+					<a
+						href="#"
+						class="btn  btn-default"
+						data-dismiss="modal">Cancelar</a>
+				</form>
+				
+				<div id="hbs-clientes-pesquisa-rapida-content"></div>
+
+				<th:block th:replace="hbs/clientes-pesquisa-rapida"></th:block>
+			</div>
+		</div>
+	</div>
+</div>
+
+</html>

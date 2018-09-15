@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html
+	lang="pt"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:brewer="http://www.brewer.algaworks.com.br"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorator="~{layout/DefaultLayout.html}">
+<head>
+<title>Pesquisa de usuários</title>
+</head>
+
+<body>
+	<div layout:fragment="content-title">
+
+		<div class="row">
+
+			<div class="col-xs-10">
+				<span class="bw-header-title text-center">Pesquisa de usuários</span>
+			</div>
+
+			<div
+				class="col-xs-2 text-right"
+				sec:authorize="hasAuthority('ADMIN')">
+
+				<a
+					class="btn btn-default bw-btn-header"
+					th:href="@{/usuarios/novo}"
+					role="button"><i class="fas fa-plus fa-lg"></i> </a>
+			</div>
+
+		</div>
+
+	</div>
+
+	<section layout:fragment="content-body">
+
+		<div class="bw-filter-panel">
+
+			<form
+				th:object="${usuarioFilter}"
+				enctype="application/x-www-form-urlencoded"
+				method="get">
+
+				<div class="row">
+
+					<div class="col-sm-2 form-group">
+						<label
+							for="nome"
+							class="control-label">Nome</label> <input
+							id="nome"
+							th:field="*{nome}"
+							type="text"
+							class="form-control" />
+					</div>
+
+					<div class="col-sm-10 form-group">
+						<label
+							for="email"
+							class="control-label">E-mail</label> <input
+							id="email"
+							th:field="*{email}"
+							type="text"
+							class="form-control" />
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div
+						class="col-sm-12"
+						brewer:classforerror="grupos">
+
+						<label
+							class="control-label"
+							for="status">Grupos</label>
+
+						<div>
+
+							<th:block th:each="grupo : ${grupos}">
+
+								<div class="checkbox checkbox-inline">
+								
+									<input
+										th:field="*{grupos}"
+										th:value="${grupo.codigo}"
+										type="checkbox"> <label
+										th:for="${#ids.prev('grupos')}"
+										th:text="${grupo.nome}">Grupo</label>
+								</div>
+
+							</th:block>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<br />
+
+				<div class="row">
+					<div class="col-sm-12">
+						<button
+							type="submit"
+							class="btn btn-default btn-primary">Pesquisar</button>
+					</div>
+				</div>
+
+			</form>
+
+		</div>
+
+		<div
+			class="aw-panel-toolbar js-usuario-status-uri"
+			data:uri="@{/usuarios/alterarStatus}">
+
+			<th:block th:each="usuarioStatus : ${usuarioStatus}">
+				<button
+					type="button"
+					class="btn btn-default js-btn-usuario-status"
+					disabled="disabled"
+					th:text="${usuarioStatus}"
+					data:status="${usuarioStatus}"></button>
+			</th:block>
+
+		</div>
+
+		<div
+			class="table-responsive bw-data-table-panel col-sm-12"
+			style="margin-top: 10px;">
+
+			<table
+				th:unless="${pagina.empty}"
+				class="table table-condensed table-hover">
+
+				<thead>
+					<tr>
+						<th>
+							<div class="checkbox">
+								<input
+									id="cb-select-all"
+									type="checkbox"
+									class="js-cb-usuario-marker-all"
+									value="all" /> <label for="cb-select-all"></label>
+							</div>
+						</th>
+
+						<th style="width: 30%;"><brewer:order-data
+								page="${pagina}"
+								property="'nome'"
+								text="'Nome'" /></th>
+
+						<th><brewer:order-data
+								page="${pagina}"
+								property="'email'"
+								text="'Email'" /></th>
+
+						<th><brewer:order-data
+								page="${pagina}"
+								property="'grupos'"
+								text="'Grupos'" /></th>
+
+						<th><brewer:order-data
+								page="${pagina}"
+								property="'ativo'"
+								text="'Status'" /></th>
+
+						<th sec:authorize="hasAuthority('ADMIN')"></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="u : ${pagina.content}">
+						<td>
+							<div
+								class="checkbox"
+								th:if="${#authentication.principal.usuario.codigo != u.codigo}">
+								<input
+									th:id="${u.codigo}"
+									type="checkbox"
+									class="js-cb-usuario-marker"
+									data:codigo="${u.codigo}" /> <label th:for="${u.codigo}"></label>
+							</div>
+						</td>
+						<td th:text="${u.nome}"></td>
+						<td th:text="${u.email}"></td>
+						<td><th:block
+								th:each="grupo : ${grupos}"
+								th:text="|${grupo.nome}${grupoStat.last ? '' : ', '}|" /></td>
+						<td th:with="status=${u.ativo ? 'ATIVO' : 'INATIVO'},label=${u.ativo ? 'label-success' : 'label-danger'}"><span
+							th:class="|label ${label}|"
+							th:text="${status}"></span></td>
+						<td
+							sec:authorize="hasAuthority('ADMIN')"
+							style="position: relative; right: 10px;"
+							class="text-center"><a th:href="@{/}"><i class="fas fa-trash-alt"></i></a> <a
+							style="position: relative; left: 15px;"
+							th:href="@{/usuarios/{id}(id=${u.codigo})}"><i class="fas fa-edit"></i></a></td>
+					</tr>
+
+				</tbody>
+
+			</table>
+
+			<div th:if="${pagina.empty}">Nenhum usuário encontrado</div>
+
+		</div>
+
+		<brewer:pagination pagina="${pagina}" />
+
+	</section>
+
+	<th:block layout:fragment="js-extra">
+
+		<script
+			type="text/javascript"
+			th:src="@{/scripts/usuario-status.js}"></script>
+
+	</th:block>
+
+</body>
+</html>

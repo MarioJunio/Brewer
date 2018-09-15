@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html
+	lang="pt"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:brewer="http://www.brewer.algaworks.com.br"
+	layout:decorator="~{layout/DefaultLayout.html}">
+<head>
+<title>Pesquisa de cervejas</title>
+</head>
+
+<body>
+	<div layout:fragment="content-title">
+
+		<div class="row">
+
+			<div class="col-xs-10">
+				<span class="bw-header-title text-center">Pesquisar de cervejas</span>
+			</div>
+
+			<div class="col-xs-2 text-right">
+
+				<a
+					class="btn btn-default bw-btn-header"
+					th:href="@{/cervejas/cadastro}"
+					role="button"><i class="fas fa-plus fa-lg"></i> </a>
+			</div>
+
+		</div>
+
+	</div>
+
+	<section layout:fragment="content-body">
+
+		<div class="bw-filter-panel">
+
+			<form
+				th:object="${cervejaFilter}"
+				enctype="application/x-www-form-urlencoded"
+				method="get">
+
+				<div class="row">
+
+					<div class="col-sm-3 form-group">
+
+						<label
+							for="sku"
+							class="control-label">SKU</label> <input
+							id="sku"
+							th:field="*{sku}"
+							type="text"
+							class="form-control" />
+					</div>
+
+					<div class="col-sm-9 form-group">
+						<label
+							for="nome"
+							class="control-label">Nome</label> <input
+							id="nome"
+							th:field="*{nome}"
+							type="text"
+							class="form-control" />
+					</div>
+
+				</div>
+
+				<div class="row">
+
+					<div class="col-sm-3 form-group">
+
+						<label
+							for="estilo"
+							class="control-label">Estilo</label>
+
+						<div class="bw-field-action">
+
+							<select
+								style="display: inline;"
+								id="estilo"
+								th:field="*{estilo}"
+								class="form-control js-cb-estilo">
+								<option
+									value=""
+									selected="selected">Selecione</option>
+								<option
+									th:each="estilo : ${estilos}"
+									th:value="${estilo.id}"
+									th:text="${estilo.nome}"></option>
+							</select>
+						</div>
+					</div>
+
+					<div class="col-sm-3 form-group">
+						<label
+							for="sabor"
+							class="control-label">Sabor</label> <select
+							id="sabor"
+							th:field="*{sabor}"
+							class="form-control">
+							<option
+								value=""
+								selected="selected">Selecione</option>
+							<option
+								th:each="sabor : ${sabores}"
+								th:value="${sabor}"
+								th:text="${sabor.descricao}"></option>
+						</select>
+
+					</div>
+
+					<div class="col-sm-6 col-lg-3 form-group">
+
+						<label
+							for="origem"
+							class="control-label">Origem</label>
+
+						<div style="position: relative; top: 5px;">
+
+							<div
+								id="origem"
+								class="radio radio-inline">
+
+								<input
+									th:id="id_todas"
+									type="radio"
+									value=""
+									th:checked="${#strings.isEmpty(origem)}"
+									name="origem"> <label
+									th:for="id_todas"
+									th:text="Todas"></label>
+							</div>
+
+							<div
+								id="origem"
+								class="radio radio-inline"
+								th:each="origem : ${origens}">
+
+								<input
+									th:id="|id_${origem}|"
+									type="radio"
+									th:field="*{origem}"
+									th:value="${origem}"> <label
+									th:for="|id_${origem}|"
+									th:text="${origem.descricao}"></label>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<button
+							type="submit"
+							class="btn btn-default btn-primary">Pesquisar</button>
+					</div>
+				</div>
+
+			</form>
+
+		</div>
+
+		<div class="table-responsive bw-data-table-panel col-sm-12">
+
+			<table
+				th:unless="${pagina.empty}"
+				class="table table-condensed table-hover">
+
+				<thead>
+					<tr>
+						<th class="text-center table-col-small"></th>
+						<th class="table-col-small"><brewer:order-data
+								page="${pagina}"
+								property="'sku'"
+								text="'SKU'" /></th>
+						<th><brewer:order-data
+								page="${pagina}"
+								property="'nome'"
+								text="'Nome'" /></th>
+						<th>Sabor</th>
+						<th class="table-col-medium">Estilo</th>
+						<th class="table-col-medium">Origem</th>
+						<th class="table-col-medium">Teor alcóolico</th>
+						<th class="table-col-medium">Valor</th>
+						<th class="table-col-small">Estoque</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="c : ${pagina.content}">
+						<td class="text-center"><img
+							th:if="${not #strings.isEmpty(c.foto)}"
+							height="45px"
+							th:src="@{/fotos/cerveja/thumbnail.{foto}(foto=${c.foto})}"
+							th:alt="${c.nome}" /> <i
+							th:if="${#strings.isEmpty(c.foto)}"
+							class="fas fa-beer fa-2x bw-beer-default-icon"></i></td>
+						<td th:text="${c.sku}"></td>
+						<td th:text="${c.nome}"></td>
+						<td th:text="${c.sabor.descricao}"></td>
+						<td th:text="${c.estilo.nome}"></td>
+						<td th:text="${c.origem.descricao}"></td>
+						<td th:text="|${c.teorAlcoolico}%|"></td>
+						<td th:text="|R$ ${c.valor}|"></td>
+						<td th:text="${c.quantidadeEstoque}"></td>
+						<td
+							style="position: relative; right: 10px;"
+							class="text-center"><a
+							data:url="@{/cervejas/{id}(id=${c.id})}"
+							data:id="${c.id}"
+							data:objeto="${c.nome}"
+							href=""
+							class="js-tooltip js-btn-excluir"
+							title="Excluir"><i class="fas fa-trash-alt"></i></a> <a
+							style="position: relative; left: 15px;"
+							class="js-tooltip js-btn-editar"
+							title="Editar"
+							th:href="@{/cervejas/{id}(id=${c.id})}"><i class="fas fa-edit"></i></a></td>
+					</tr>
+
+				</tbody>
+
+			</table>
+
+			<div th:if="${pagina.empty}">Nenhuma cerveja encontrada</div>
+
+		</div>
+
+		<brewer:pagination pagina="${pagina}" />
+
+	</section>
+
+	<th:block layout:fragment="js-extra">
+
+		<script
+			type="text/javascript"
+			th:src="@{/scripts/pesquisa-exclusao.js}"></script>
+	</th:block>
+
+</body>
+</html>

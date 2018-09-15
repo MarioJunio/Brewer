@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html
+	lang="pt"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:brewer="http://www.brewer.algaworks.com.br"
+	layout:decorator="~{layout/DefaultLayout.html}">
+<head>
+<title>Pesquisa de clientes</title>
+</head>
+
+<body>
+	<div layout:fragment="content-title">
+
+		<div class="row">
+
+			<div class="col-xs-10">
+				<span class="bw-header-title text-center">Pesquisa de clientes</span>
+			</div>
+
+			<div class="col-xs-2 text-right">
+
+				<a
+					class="btn btn-default bw-btn-header"
+					th:href="@{/clientes/novo}"
+					role="button"><i class="fas fa-plus fa-lg"></i> </a>
+			</div>
+
+		</div>
+
+	</div>
+
+	<section layout:fragment="content-body">
+
+		<div class="bw-filter-panel">
+
+			<form
+				th:object="${clienteFilter}"
+				enctype="application/x-www-form-urlencoded"
+				method="get">
+
+				<div class="row">
+
+					<div class="col-sm-9 form-group">
+
+						<label
+							for="nome"
+							class="control-label">Nome</label> <input
+							id="nome"
+							th:field="*{nome}"
+							type="text"
+							class="form-control" />
+					</div>
+
+					<div class="col-sm-3 form-group">
+						<label
+							for="cpfCnpj"
+							class="control-label">CPF/CNPJ</label> <input
+							id="cpfCnpj"
+							th:field="*{cpfCnpj}"
+							type="text"
+							class="form-control" />
+					</div>
+
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<button
+							type="submit"
+							class="btn btn-default btn-primary">Pesquisar</button>
+					</div>
+				</div>
+
+			</form>
+
+		</div>
+
+		<div class="table-responsive bw-data-table-panel col-sm-12">
+
+			<table
+				th:unless="${pagina.empty}"
+				class="table table-condensed table-hover">
+
+				<thead>
+					<tr>
+						<th style="width: 40%;"><brewer:order-data
+								page="${pagina}"
+								property="'nome'"
+								text="'Nome'" /></th>
+						<th><brewer:order-data
+								page="${pagina}"
+								property="'tipoPessoa'"
+								text="'Tipo Pessoa'" /></th>
+						<th>CPF/CNPJ</th>
+						<th>Telefone</th>
+						<th>Cidade</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="c : ${pagina.content}">
+						<td th:text="${c.nome}"></td>
+						<td th:text="${c.tipoPessoa}"></td>
+						<td th:text="${c.cpfCnpj}"></td>
+						<td th:text="${c.telefone}"></td>
+						<td th:text="|${c.endereco.cidade.nome} - ${c.endereco.cidade.estado.uf}|"></td>
+						<td
+							style="position: relative; right: 10px;"
+							class="text-center"><a th:href="@{/}"><i class="fas fa-trash-alt"></i></a> <a
+							style="position: relative; left: 15px;"
+							th:href="@{/}"><i class="fas fa-edit"></i></a></td>
+					</tr>
+
+				</tbody>
+
+			</table>
+
+			<div th:if="${pagina.empty}">Nenhum cliente encontrado</div>
+
+		</div>
+
+		<brewer:pagination pagina="${pagina}" />
+
+	</section>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+alter table cerveja add column content_type varchar(100);

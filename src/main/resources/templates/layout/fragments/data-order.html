@@ -1,0 +1,7 @@
+<th:block th:fragment="order(pagina, property, text)">
+	<a th:href="${pagina.urlSort(property)}"><span th:text="${text}"></span> <i
+		class="fas fa-caret-up"
+		th:if="${pagina.ascendente(property)}"></i> <i
+		class="fas fa-caret-down"
+		th:if="${pagina.descendente(property)}"></i></a>
+</th:block>

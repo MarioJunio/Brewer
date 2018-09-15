@@ -1,0 +1,1 @@
+insert into permissao(codigo, nome) values(1, 'CADASTRO_CLIENTE'), (2, 'CADASTRO_CIDADE'), (3, 'ADMIN');

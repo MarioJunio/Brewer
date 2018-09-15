@@ -1,0 +1,1 @@
+insert into grupo_permissao(codigo_grupo, codigo_permissao) values (1, 1), (1, 2), (1, 3), (2, 1);

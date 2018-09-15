@@ -1,0 +1,31 @@
+<th:block th:fragment="pagination (pagina)">
+
+	<div class="row">
+	
+		<div
+			class="col-sm-12 text-center"
+			th:unless="${pagina.empty}">
+
+			<nav aria-label="Page navigation example">
+
+				<ul class="pagination">
+
+					<th:block th:with="paginaAtual=${pagina.current}">
+
+						<li th:class="${pagina.first} ? 'disabled'"><a th:href="|?page=${paginaAtual - 1}|"><i class="fas fa-angle-left"></i></a></li>
+
+						<li
+							th:each="p : ${#numbers.sequence(1, pagina.totalPages)}"
+							th:with="numeroPagina=${p - 1}"
+							th:class="${numeroPagina == paginaAtual} ? 'active'"><a th:href="${pagina.url(numeroPagina)}">[[${p}]]</a></li>
+
+						<li th:class="${pagina.last} ? 'disabled'"><a th:href="|?page=${paginaAtual + 1}|"><i class="fas fa-angle-right"></i></a></li>
+
+					</th:block>
+				</ul>
+			</nav>
+
+		</div>
+	</div>
+
+</th:block>

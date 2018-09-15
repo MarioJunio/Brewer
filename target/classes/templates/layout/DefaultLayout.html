@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html
+	lang="pt"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8" />
+<meta
+	http-equiv="X-UA-Compatible"
+	content="IE=edge" />
+<meta
+	name="viewport"
+	content="width=device-width, initial-scale=1" />
+
+<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Brewer</title>
+
+<link
+	rel="stylesheet"
+	type="text/css"
+	th:href="@{/layout/stylesheets/vendors.min.css}" />
+<link
+	rel="stylesheet"
+	type="text/css"
+	th:href="@{/layout/stylesheets/algaworks.min.css}" />
+<link
+	rel="stylesheet"
+	type="text/css"
+	th:href="@{/layout/stylesheets/application.css}" />
+
+<link
+	rel="stylesheet"
+	type="text/css"
+	th:href="@{/stylesheets/vendors/fontawesome-all.min.css}" />
+
+<link
+	rel="stylesheet"
+	type="text/css"
+	th:href="@{/stylesheets/vendors/bootstrap-datepicker3.standalone.min.css}" />
+
+<link
+	rel="stylesheet"
+	type="text/css"
+	th:href="@{/layout/stylesheets/sweetalert2.min.css}" />
+
+<link
+	rel="stylesheet"
+	type="text/css"
+	th:href="@{/stylesheets/brewer.css}" />
+
+<link
+	rel="shortcut icon"
+	th:href="@{/images/favicon.png}" />
+
+</head>
+<body>
+
+	<input
+		type="hidden"
+		name="_csrf_header"
+		th:value="${_csrf.headerName}" />
+	<input
+		type="hidden"
+		name="_csrf"
+		th:value="${_csrf.token}" />
+
+	<div class="aw-layout-loading  js-loading-overlay">
+		<div class="aw-layout-loading__container">
+			<span class="aw-balls-spinner">Carregando...</span>
+		</div>
+	</div>
+
+	<div class="aw-layout-page">
+
+		<div layout:replace="layout/fragments/header :: navbar-top"></div>
+		<div layout:replace="layout/fragments/left-side-nav :: left-side-nav"></div>
+
+		<section class="container-fluid aw-layout-content  js-content">
+
+			<div
+				class="page-header"
+				layout:fragment="content-title">
+
+				<div class="row">
+
+					<div class="col-sm-10">
+						<span class="bw-header-title">Cervejas</span>
+					</div>
+
+				</div>
+			</div>
+
+			<section
+				layout:fragment="content-body"
+				class="bw-page-content">Conteudo vai aqui!!!</section>
+
+			<script>
+				function excluir() {
+					swal({
+						title : "Tem certeza?",
+						text : "Você não poderá recuperar o produto após a exclusão.",
+						type : "warning",
+						showCancelButton : true,
+						confirmButtonColor : "#DD6B55",
+						confirmButtonText : "Sim, exclua agora!",
+						closeOnConfirm : false,
+						showLoaderOnConfirm : true
+					}, function() {
+						setTimeout(function() {
+							swal("Excluído!", "O produto foi excluído com sucesso.", "success");
+						}, 2000);
+					});
+				}
+			</script>
+
+		</section>
+
+		<div layout:replace="layout/fragments/footer :: footer"></div>
+
+	</div>
+
+	<script th:src="@{/layout/javascripts/vendors.min.js}"></script>
+	<script th:src="@{/layout/javascripts/algaworks.min.js}"></script>
+	<script th:src="@{/scripts/vendors/jquery.maskMoney.min.js}"></script>
+	<script th:src="@{/scripts/vendors/jquery.mask.min.js}"></script>
+	<script th:src="@{/scripts/vendors/uikit.min.js}"></script>
+	<script th:src="@{/scripts/vendors/upload.min.js}"></script>
+	<script th:src="@{/scripts/vendors/bootstrap-datepicker.min.js}"></script>
+	<script th:src="@{/scripts/vendors/bootstrap-datepicker.pt-BR.min.js}"></script>
+	<script th:src="@{/scripts/vendors/numeral.min.js}"></script>
+	<script th:src="@{/scripts/vendors/locales.min.js}"></script>
+	<script th:src="@{/layout/vendors/sweetalert/sweetalert2.all.min.js}"></script>
+
+	<script th:src="@{/scripts/brewer.js}"></script>
+
+	<th:block layout:fragment="js-extra"></th:block>
+</body>
+</html>

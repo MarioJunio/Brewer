@@ -1,0 +1,1 @@
+alter table cliente add column tipo_pessoa varchar(10);

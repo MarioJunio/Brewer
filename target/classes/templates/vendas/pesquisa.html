@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html
+	lang="pt"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:brewer="http://www.brewer.algaworks.com.br"
+	layout:decorator="~{layout/DefaultLayout.html}">
+<head>
+<title>Pesquisa de vendas</title>
+</head>
+
+<body>
+	<div layout:fragment="content-title">
+
+		<div class="row">
+
+			<div class="col-xs-10">
+				<span class="bw-header-title text-center">Pesquisa de vendas</span>
+			</div>
+
+			<div class="col-xs-2 text-right">
+
+				<a
+					class="btn btn-default bw-btn-header"
+					th:href="@{/vendas/nova}"
+					role="button"><i class="fas fa-plus fa-lg"></i> </a>
+			</div>
+
+		</div>
+
+	</div>
+
+	<section layout:fragment="content-body">
+
+		<div class="bw-filter-panel">
+
+			<form
+				th:object="${vendaFilter}"
+				th:action="@{/vendas}"
+				enctype="application/x-www-form-urlencoded"
+				method="get">
+
+				<div class="row">
+
+					<div class="col-sm-2 form-group">
+						<label
+							for="codigo"
+							class="control-label">Código</label> <input
+							id="codigo"
+							th:field="*{id}"
+							type="text"
+							class="form-control" />
+					</div>
+
+					<div class="col-sm-4 form-group">
+						<label
+							for="status"
+							class="control-label">Status</label> <select
+							id="status"
+							th:field="*{status}"
+							class="form-control">
+							<option
+								selected="selected"
+								value="">Todos os status</option>
+							<option
+								th:each="s : ${todosStatus}"
+								th:value="${s}"
+								th:text="${s.descricao}" />
+						</select>
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div class="form-group col-sm-6">
+
+						<label
+							for="data-criacao-inicial"
+							class="control-label">Data de criação</label>
+
+						<div class="form-inline">
+
+							<input
+								id="data-criacao-inicial"
+								placeholder="00/00/0000"
+								th:field="*{dataCriacaoInicio}"
+								autocomplete="off"
+								type="text"
+								class="form-control js-date" /> <span style="margin: 5px;">até</span> <input
+								placeholder="00/00/0000"
+								id="data-criacao-final"
+								autocomplete="off"
+								th:field="*{dataCriacaoFinal}"
+								type="text"
+								class="form-control js-date" />
+						</div>
+
+					</div>
+
+					<div class="form-group col-sm-6">
+
+						<label
+							for="valor-total-inicial"
+							class="control-label">Valor total</label>
+
+						<div class="form-inline">
+
+							<input
+								id="valor-total-inicial"
+								th:field="*{valorTotalInicial}"
+								type="text"
+								class="form-control" /> <span style="margin: 5px;">até</span> <input
+								id="valor-total-final"
+								th:field="*{valorTotalFinal}"
+								type="text"
+								class="form-control" />
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="row">
+
+					<div class="col-sm-6 form-group">
+						<label
+							for="nome-cliente"
+							class="control-label">Nome do cliente</label> <input
+							id="nome-cliente"
+							th:field="*{cliente}"
+							type="text"
+							class="form-control" />
+					</div>
+
+					<div class="col-sm-6 form-group">
+						<label
+							for="cpf-cnpj"
+							class="control-label">CPF/CNPJ</label> <input
+							id="cpf-cnpj"
+							th:field="*{cpfCnpj}"
+							type="text"
+							class="form-control" />
+					</div>
+
+				</div>
+
+				<div class="row">
+
+					<div class="col-sm-12">
+						<button
+							type="submit"
+							class="btn  btn-primary">Pesquisar</button>
+					</div>
+
+				</div>
+
+			</form>
+
+		</div>
+
+		<div class="table-responsive bw-data-table-panel col-sm-12">
+
+			<table
+				th:unless="${pagina.empty}"
+				class="table table-condensed table-hover">
+
+				<thead>
+					<tr>
+						<th>Código</th>
+						<th style="width: 40%;"><brewer:order-data
+								page="${pagina}"
+								property="'cliente.nome'"
+								text="'Cliente'" /></th>
+						<th>Data de criação</th>
+						<th>Valor total</th>
+						<th>Vendedor</th>
+						<th>Status</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="v : ${pagina.content}">
+						<td th:text="${v.id}"></td>
+						<td th:text="${v.cliente.nome}"></td>
+						<td th:text="${#temporals.format(v.dataCriacao, 'dd/MM/yyyy HH:mm')}"></td>
+						<td th:text="${{v.valorTotal}}"></td>
+						<td th:text="${v.vendedor.nome}"></td>
+						<td th:text="${v.statusVenda.descricao}"></td>
+						<td
+							style="position: relative; right: 10px;"
+							class="text-center"><a
+							style="position: relative; left: 15px;"
+							th:href="@{/}"><i class="fas fa-edit"></i></a></td>
+					</tr>
+
+				</tbody>
+
+			</table>
+
+			<div th:if="${pagina.empty}">Nenhuma venda encontrada</div>
+
+		</div>
+
+		<brewer:pagination pagina="${pagina}" />
+
+	</section>
+
+</body>
+</html>

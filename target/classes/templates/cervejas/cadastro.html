@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html
+	lang="pt"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:brewer="http://www.brewer.algaworks.com.br"
+	layout:decorator="~{layout/DefaultLayout.html}">
+<head>
+<title>Cadastro de Cervejas</title>
+
+<link
+	rel="stylesheet"
+	type="text/css"
+	th:href="@{/stylesheets/vendors/upload.min.css}" />
+
+</head>
+
+<body>
+
+	<div layout:fragment="content-title">
+
+		<div class="row">
+
+			<div class="col-xs-10">
+				<span class="bw-header-title text-center" th:if="${cerveja.nova}">Cadastrar cerveja</span>
+				<span class="bw-header-title text-center" th:unless="${cerveja.nova}">Edição [[${cerveja.nome}]]</span>
+			</div>
+
+			<div class="col-xs-2 text-right">
+
+				<a
+					class="btn btn-default bw-btn-header"
+					th:href="@{/cervejas}"
+					role="button"><i class="fas fa-search fa-lg"></i> </a>
+			</div>
+
+		</div>
+
+	</div>
+
+	<section layout:fragment="content-body">
+
+		<brewer:message />
+
+		<form
+			method="post"
+			th:object="${cerveja}"
+			th:action="@{/cervejas/salvar}"
+			enctype="application/x-www-form-urlencoded"
+			class="form-vertical  js-form-loading">
+
+			<input
+				type="hidden"
+				class="js-cerveja-id"
+				th:field="*{id}" />
+
+			<brewer:validation />
+
+			<div class="row">
+
+				<div
+					class="col-sm-3 form-group bw-required"
+					brewer:classforerror="sku">
+
+					<label
+						for="sku"
+						class="control-label">SKU</label> <input
+						id="sku"
+						type="text"
+						th:field="*{sku}"
+						class="form-control" />
+				</div>
+
+				<div
+					class="col-sm-9 form-group bw-required"
+					brewer:classforerror="nome">
+					<label
+						for="nome"
+						class="control-label">Nome</label> <input
+						id="nome"
+						type="text"
+						class="form-control"
+						th:field="*{nome}" />
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div
+					class="col-sm-12 form-group bw-required"
+					brewer:classforerror="*{descricao}">
+					<label
+						for="descricao"
+						class="control-label">Descrição</label>
+					<textarea
+						id="descricao"
+						rows="3"
+						class="form-control"
+						th:field="*{descricao}"></textarea>
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div
+					class="col-sm-3 form-group bw-required"
+					brewer:classforerror="*{estilo}">
+
+					<label
+						for="estilo"
+						class="control-label">Estilo</label>
+
+					<div class="bw-field-action">
+						<select
+							style="display: inline;"
+							id="estilo"
+							th:field="*{estilo}"
+							class="form-control js-cb-estilo">
+							<option
+								value=""
+								selected="selected">Selecione</option>
+							<option
+								th:each="estilo : ${estilos}"
+								th:value="${estilo.id}"
+								th:text="${estilo.nome}"></option>
+						</select> <a
+							href=""
+							data-toggle="modal"
+							data-target=".bs-cadastro-estilo"
+							class="bw-field-action-button"><span
+							class="glyphicon glyphicon-plus"
+							aria-hidden="true"></span></a>
+					</div>
+				</div>
+
+				<div
+					class="col-sm-3 form-group bw-required"
+					brewer:classforerror="*{sabor}">
+					<label
+						for="sabor"
+						class="control-label">Sabor</label> <select
+						id="sabor"
+						th:field="*{sabor}"
+						class="form-control">
+						<option
+							value=""
+							selected="selected">Selecione</option>
+						<option
+							th:each="sabor : ${sabores}"
+							th:value="${sabor}"
+							th:text="${sabor.descricao}"></option>
+					</select>
+
+				</div>
+
+				<div
+					class="col-sm-3 form-group bw-required"
+					brewer:classforerror="*{teorAlcoolico}">
+					<label
+						for="sabor"
+						class="control-label">Teor alcoólico</label>
+					<div class="input-group">
+						<input
+							type="text"
+							th:field="*{teorAlcoolico}"
+							class="form-control js-decimal"
+							id="sabor" />
+						<div class="input-group-addon">%</div>
+
+					</div>
+				</div>
+
+				<div
+					class="col-sm-6 col-lg-3 form-group bw-required"
+					brewer:classforerror="*{origem}">
+
+					<label
+						for="origem"
+						class="control-label">Origem</label>
+
+					<div style="position: relative; top: 5px;">
+
+						<div
+							id="origem"
+							class="radio radio-inline"
+							th:each="origem : ${origens}">
+
+							<input
+								th:id="|id_${origem}|"
+								type="radio"
+								th:value="${origem}"
+								th:field="*{origem}"> <label
+								th:for="|id_${origem}|"
+								th:text="${origem.descricao}"></label>
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="row">
+
+				<div
+					class="col-sm-3 form-group bw-required"
+					brewer:classforerror="*{valor}">
+					<label
+						for="valor"
+						class="control-label">Valor</label>
+					<div class="input-group">
+						<span class="input-group-addon">R$</span> <input
+							id="valor"
+							th:field="*{valor}"
+							type="text"
+							class="form-control js-decimal" />
+					</div>
+				</div>
+
+				<div
+					class="col-sm-3 form-group bw-required"
+					brewer:classforerror="*{comissao}">
+					<label
+						for="comissao"
+						class="control-label">Comissão</label>
+					<div class="input-group">
+						<input
+							id="comissao"
+							type="text"
+							th:field="*{comissao}"
+							class="form-control js-decimal" /> <span class="input-group-addon">%</span>
+					</div>
+				</div>
+
+				<div
+					class="col-sm-3 form-group bw-required"
+					brewer:classforerror="*{quantidadeEstoque}">
+					<label
+						for="estoque"
+						class="control-label">Estoque</label>
+					<div class="input-group">
+						<input
+							id="estoque"
+							th:field="*{quantidadeEstoque}"
+							type="text"
+							class="form-control js-plain" />
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+
+				<div class="col-sm-12 js-foto-cerveja-container">
+
+					<span
+						th:text="@{/fotos/cerveja}"
+						class="hidden js-upload-fotos-controller"></span> <input
+						type="hidden"
+						th:field="*{foto}" /> <input
+						type="hidden"
+						th:field="*{contentType}" />
+
+					<div
+						id="upload-drop"
+						class="uk-placeholder js-foto-cerveja-upload">
+
+						<i class="fas fa-cloud-upload-alt fa-2x bw-icon-upload"></i> Arraste a foto aqui ou <a class="bw-form-file">selecione<input
+							id="upload-select"
+							accept=".jpg,.jpeg,.png"
+							type="file" /></a>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="form-group">
+
+				<button
+					class="btn  btn-primary"
+					type="submit">Salvar</button>
+			</div>
+
+		</form>
+
+		<th:block th:include="cervejas/fragments/cadastro-estilo-modal.html"></th:block>
+
+		<th:block th:include="hbs/upload-foto-cerveja.html"></th:block>
+
+	</section>
+
+	<th:block layout:fragment="js-extra">
+
+		<script
+			type="text/javascript"
+			th:src="@{/scripts/vendors/handlebars.min.js}"></script>
+
+		<script
+			type="text/javascript"
+			th:src="@{/scripts/cadastro-estilo.js}"></script>
+
+		<script
+			type="text/javascript"
+			th:src="@{/scripts/cerveja-upload-foto.js}"></script>
+
+	</th:block>
+</body>
+</html>

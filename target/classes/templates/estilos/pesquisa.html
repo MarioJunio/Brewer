@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html
+	lang="pt"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:brewer="http://www.brewer.algaworks.com.br"
+	layout:decorator="~{layout/DefaultLayout.html}">
+<head>
+<title>Pesquisa de estilos</title>
+</head>
+
+<body>
+	<div layout:fragment="content-title">
+
+		<div class="row">
+
+			<div class="col-xs-10">
+				<span class="bw-header-title text-center">Pesquisa de estilos</span>
+			</div>
+
+			<div class="col-xs-2 text-right">
+
+				<a
+					class="btn btn-default bw-btn-header"
+					th:href="@{/estilos/cadastro}"
+					role="button"><i class="fas fa-plus fa-lg"></i> </a>
+			</div>
+
+		</div>
+
+	</div>
+
+	<section layout:fragment="content-body">
+
+		<div class="bw-filter-panel">
+			<form
+				method="get"
+				enctype="application/x-www-form-urlencoded"
+				th:object="${estiloFilter}">
+
+				<div class="row">
+
+					<div class="form-group col-sm-12">
+
+						<label
+							for="nome"
+							class="control-label">Nome</label> <input
+							id="nome"
+							th:field="*{nome}"
+							type="text"
+							class="form-control" />
+					</div>
+
+					<div class="col-sm-12">
+						<button
+							type="submit"
+							class="btn btn-primary">Pesquisar</button>
+					</div>
+				</div>
+
+			</form>
+		</div>
+
+		<div class="table-responsive bw-data-table-panel col-sm-12">
+
+			<table
+				th:unless="${pagina.empty}"
+				class="table table-condensed table-hover">
+
+				<thead>
+					<tr>
+						<th class="text-left"><brewer:order-data
+								page="${pagina}"
+								property="'id'"
+								text="'Código'" /></th>
+						<th class="table-col-medium"><brewer:order-data
+								page="${pagina}"
+								property="'nome'"
+								text="'Nome'" /></th>
+						<th class="table-col-small"></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="c : ${pagina.content}">
+						<td
+							style="width: 10%;"
+							th:text="${c.id}"
+							class="text-left"></td>
+						<td th:text="${c.nome}"></td>
+						<td
+							style="position: relative; right: 10px;"
+							class="text-right"><a th:href="@{/}"><i class="fas fa-trash-alt"></i></a> <a
+							style="position: relative; left: 15px;"
+							th:href="@{/}"><i class="fas fa-edit"></i></a></td>
+					</tr>
+
+				</tbody>
+
+			</table>
+
+			<div th:if="${pagina.empty}">Nenhum estilo encontrado</div>
+
+		</div>
+
+		<brewer:pagination pagina="${pagina}" />
+
+	</section>
+
+</body>
+</html>

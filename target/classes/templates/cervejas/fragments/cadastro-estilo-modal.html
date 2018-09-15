@@ -1,0 +1,75 @@
+<section>
+	<div
+		class="modal fade bs-cadastro-estilo"
+		tabindex="-1"
+		role="dialog">
+		<div
+			class="modal-dialog modal-sm"
+			role="document">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<button
+						type="button"
+						class="close"
+						data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4
+						class="modal-title"
+						id="gridSystemModalLabel">Cadastro de Estilo</h4>
+				</div>
+
+				<form
+					class="js-form-cadastro-estilo"
+					method="post"
+					enctype="application/x-www-form-urlencoded"
+					th:action="@{/estilos/salvarModal}">
+
+					<div class="modal-body">
+
+						<div
+							class="alert alert-danger alert-dismissible js-error-message hide"
+							role="alert">
+
+							<button
+								type="button"
+								class="close"
+								data-dismiss="alert"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<div>
+								<i class="fa fa-exclamation-circle"></i> <span class="js-error-message">Mensagem de erro</span>
+							</div>
+						</div>
+
+						<div class="row">
+
+							<div class="form-group col-sm-12 js-form-field-nome">
+
+								<label
+									for="nome"
+									class="control-label">Nome</label> <input
+									type="text"
+									class="form-control"
+									id="nome"
+									placeholder="Digite o nome do estilo...">
+							</div>
+						</div>
+
+					</div>
+
+					<div class="modal-footer">
+						<button
+							type="button"
+							class="btn btn-primary js-btn-salvar">Salvar</button>
+					</div>
+
+				</form>
+
+			</div>
+		</div>
+	</div>
+</section>

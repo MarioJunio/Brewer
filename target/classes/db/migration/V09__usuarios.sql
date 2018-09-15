@@ -1,0 +1,1 @@
+insert into usuario(codigo, nome, email, senha, ativo) values (999, 'Mario Junio', 'dev.mario.93@gmail.com', '$2a$10$oYYqJY24BkX8IZyZabRXFe41WmWfloa3PQDmPhq.2w2BVlFoFMii6', true);

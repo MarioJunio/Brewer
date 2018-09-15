@@ -1,0 +1,292 @@
+.bw-field-action {
+	display: flex;
+}
+
+.page-header {
+	line-height: 60px;
+	margin: 0;
+}
+
+.bw-page-content {
+	margin-top: 20px;
+}
+
+.bw-field-action-button {
+	margin: 6px 0 0 6px;
+}
+
+.uk-placeholder {
+	margin-bottom: 15px;
+	padding: 15px;
+	border: 1px dashed #E5E5E5;
+	background: #fafafa;
+	color: #666;
+	text-align: center;
+}
+
+.bw-icon-upload {
+	position: relative;
+	top: 5px;
+	right: 10px;
+}
+
+.bw-form-file {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	overflow: hidden;
+}
+
+/* Easy Autocomplete */
+.easy-autocomplete input {
+	border-radius: 2px !important;
+}
+
+.easy-autocomplete-container ul li {
+	font-size: 1em !important;
+	padding: 0px 5px !important;
+}
+
+/* Tabela Item */
+.bw-tabela-item {
+	position: relative;
+	/* Para que o painel de exclusão apareça dentro da linha */
+	padding: 15px 0;
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+
+.bw-tabela-item:after {
+	clear: both;
+	display: block;
+	content: "";
+}
+
+.bw-tabela-item ~ .bw-tabela-item {
+	border-top: 1px solid #ddd;
+}
+
+.bw-tabela-item__coluna {
+	padding: 0 10px;
+}
+
+.bw-tabela-item__coluna--foto {
+	float: left;
+	width: 60px;
+	text-align: center;
+}
+
+.bw-tabela-item__coluna--valores {
+	padding-right: 0px;
+}
+
+.bw-tabela-item__coluna--detalhes, .bw-tabela-item__coluna--valores {
+	margin-left: 60px;
+}
+
+.bw-tabela-cerveja-nome {
+	font-weight: 500;
+	font-size: 1.1em;
+	display: block;
+}
+
+.bw-tabela-cerveja-origem {
+	color: #aaa;
+	display: block;
+	font-weight: 200;
+}
+
+.bw-tabela-cerveja-campo-quantidade {
+	width: 30px;
+	text-align: right;
+}
+
+.bw-tabela-cerveja-valor-pequeno {
+	font-weight: 300;
+	font-size: 1em;
+}
+
+.bw-tabela-cerveja-valor-medio {
+	font-weight: 300;
+	font-size: 1.3em;
+}
+
+.bw-tabela-cerveja-valor-grande {
+	font-weight: 300;
+	font-size: 1.6em;
+}
+
+.bw-tabela-item__painel-exclusao {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 50%;
+	text-align: center;
+	padding-top: 35px;
+	background-color: #F39C12;
+	display: none;
+	transition: display 0.5s;
+}
+
+.solicitando-exclusao {
+	display: block;
+}
+
+.bw-tabela-item__titulo-exclusao {
+	display: block;
+	margin-bottom: 5px;
+	color: #fff;
+	font-size: 1.3em;
+}
+
+@media ( min-width : 768px) { /* screen-sm-min */
+	.bw-tabela-item__painel-exclusao {
+		width: 40%;
+		padding-top: 10px;
+	}
+	.bw-tabela-item__coluna {
+		float: left;
+		margin-left: 0px;
+	}
+	.bw-tabela-item__coluna--detalhes {
+		width: calc(70% - 30px);
+	}
+	.bw-tabela-item__coluna--valores {
+		width: calc(30% - 30px);
+		text-align: right;
+	}
+}
+
+.bw-form-file, a {
+	color: #1D8ACB;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.bw-form-file input[type=file] {
+	position: absolute;
+	top: 0;
+	z-index: 1;
+	width: 100%;
+	opacity: 0;
+	cursor: pointer;
+	left: 0;
+	fonr-size: 100%;
+}
+
+.bw-image-uploaded-holder {
+	height: 200px;
+	width: 300px;
+	margin: 0 auto;
+	position: relative;
+}
+
+.bw-image-uploaded {
+	border: 2px dashed #90CAF9;
+	border-radius: 4px;
+	padding: 0px;
+	transition: all 0.5s linear;
+}
+
+.bw-image-uploaded:hover {
+	border: 2px dashed #1E88E5;
+	transition: all 0.5s linear;
+}
+
+.bw-image-uploaded-title {
+	left: 0px;
+	bottom: 0px;
+	font-family: Arial;
+	font-size: 0.9em;
+	vertical-align: middle;
+	color: #1e94d2;
+}
+
+.bw-del-foto-cerveja {
+	margin-top: 10px;
+}
+
+.bw-required>.control-label:after {
+	content: " *";
+}
+
+.bw-header-title {
+	font-family: Arial;
+	font-size: 1.8em;
+	margin-left: 20px;
+}
+
+.bw-btn-header {
+	position: relative;
+	top: 3px;
+}
+
+.bw-data-table-panel {
+	margin-top: 20px;
+}
+
+.table-col-small {
+	width: 60px;
+}
+
+.table-col-medium {
+	width: 120px;
+}
+
+.table-col-large {
+	width: 160px;
+}
+
+.table>tbody>tr>td {
+	vertical-align: middle;
+}
+
+.aw-panel-toolbar {
+	margin-top: 30px;
+	margin-left: 10px;
+}
+
+/* Colunas - Pesquisa de usuários */
+.table-usuarios-col-status {
+	width: 30px;
+	text-align: center;
+}
+
+/* Tabela Cervejas página de Venda */
+.bw-tabela-cervejas {
+	margin-bottom: 15px;
+}
+
+.bw-tabela-cervejas__vazio {
+	padding: 15px 15px;
+	border: 1px dashed #ddd;
+	text-align: center;
+	font-size: 1.2em;
+	font-weight: 300;
+	color: #555;
+}
+
+.success-title {
+	color: #43a047;
+}
+
+.danger-title {
+	color: #f44336;
+}
+
+.default-title {
+	color: black;
+}
+
+/*
+######################################
+# CUSTOMIZAÇÃO DE COMPONENTES
+######################################
+*/
+.checkbox input[type="checkbox"]:checked+input+label::after {
+	font-family: 'FontAwesome';
+	content: "\f00c";
+}

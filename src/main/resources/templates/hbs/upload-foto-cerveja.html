@@ -1,0 +1,20 @@
+<script
+	id="upload-foto-cerveja"
+	type="text/x-handlebars-template">
+
+	<div class="bw-image-uploaded-holder text-center js-foto-cerveja hidden">
+
+		<img
+			class="bw-image-uploaded"
+			th:src="@{/fotos/cerveja/{{nome}}}"
+			height="200px" />
+
+		<div class="bw-image-uploaded-title">{{nomeOriginal}}</div>
+
+		<a th:href="@{/fotos/cerveja/excluir/{{nome}}}" class="bw-del-foto-cerveja js-btn-del-foto-cerveja-upload">
+			<i class="fas fa-times fa-lg"></i>
+		</a>
+
+	</div>
+
+</script>

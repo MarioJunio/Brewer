@@ -1,0 +1,1 @@
+insert into grupo(codigo, nome) values (1, 'Administrador'), (2, 'Vendedor');
