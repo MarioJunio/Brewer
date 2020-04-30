@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mj.brewer.utils.Utils;
@@ -20,17 +22,16 @@ import com.mj.brewer.utils.Utils.Dimensoes;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.name.Rename;
 
-public class FotoStorageLocal implements IFotoStorage {
+@Profile("local")
+@Component
+public class FotoStorageLocal implements FotoStorage {
 
 	private Logger logger = LoggerFactory.getLogger(FotoStorageLocal.class);
-	public static final String PREFIX_DOT_THUMBNAIL = "thumbnail.";
 
 	private Path local;
-	private Path localTemporario;
 
 	public FotoStorageLocal() {
 		this.local = Paths.get(System.getenv("HOME"), ".brewerfotos");
-		this.localTemporario = Paths.get(this.local.toAbsolutePath().toString(), "temp");
 		criarPastas();
 	}
 
@@ -38,61 +39,68 @@ public class FotoStorageLocal implements IFotoStorage {
 
 		try {
 			Files.createDirectories(this.local);
-			Files.createDirectories(this.localTemporario);
 			logger.info("Diretório criado: " + this.local.toAbsolutePath());
-			logger.info("Diretório criado: " + this.localTemporario.toAbsolutePath());
 		} catch (IOException e) {
 			throw new RuntimeException("Não foi possível criar os diretórios para armazenas as fotos ", e);
 		}
 	}
 
 	@Override
-	public String salvarTemporariamente(MultipartFile multipartFile) {
-		String novoNome = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
+	public byte[] recuperar(String nome) {
 
 		try {
-			multipartFile.transferTo(new File(this.localTemporario.toAbsolutePath().toString(), novoNome));
-		} catch (IllegalStateException | IOException e) {
-			throw new RuntimeException("Erro salvar temporariamente a foto", e);
-		}
-
-		return novoNome;
-	}
-
-	@Override
-	public byte[] recuperarTemporario(String nome) {
-
-		try {
-			return Files.readAllBytes(Paths.get(this.localTemporario.toAbsolutePath().toString(), nome));
-		} catch (IOException e) {
-			throw new RuntimeException("Não foi possível recuperar a foto temporária", e);
-		}
-
-	}
-
-	@Override
-	public void salvar(String nome) {
-
-		try {
-			Files.move(localTemporario.resolve(nome), local.resolve(nome));
+			return Files.readAllBytes(local.resolve(nome));
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Não foi possível mover a foto da pasta temporária para a pasta corrente", e);
+			throw new RuntimeException("Erro ao recuperar foto " + nome, e);
 		}
 	}
 
 	@Override
-	public byte[] recuperar(String nome) throws IOException {
-		return Files.readAllBytes(local.resolve(nome));
+	public String salvar(MultipartFile[] files) {
+
+		if (files != null && files.length > 0) {
+			MultipartFile arquivo = files[0];
+
+			String arquivoRenomeado = UUID.randomUUID().toString() + "_" + arquivo.getOriginalFilename();
+
+			try {
+				// salva arquivo na pasta de fotos
+				arquivo.transferTo(new File(this.local.toAbsolutePath().toString(), arquivoRenomeado));
+
+				// cria thumbnail da foto
+				criarThumb(arquivoRenomeado);
+
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+				throw new RuntimeException("Erro ao salvar a foto", e);
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new RuntimeException("Erro ao salvar a foto", e);
+			}
+
+			return arquivoRenomeado;
+		}
+
+		return null;
 	}
 
 	@Override
-	public byte[] recuperarThumbnail(String nome) throws IOException {
-		return Files.readAllBytes(local.resolve(PREFIX_DOT_THUMBNAIL + nome));
+	public void excluir(String foto) {
+		try {
+			Files.deleteIfExists(local.resolve(foto));
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Erro ao excluir foto", e);
+		}
 	}
 
 	@Override
-	public void criarThumb(String nome) {
+	public byte[] recuperarThumbnail(String foto) {
+		return recuperar(PREFIX_DOT_THUMBNAIL + foto);
+	}
+
+	private void criarThumb(String nome) {
 
 		BufferedImage bufferImage;
 
@@ -110,13 +118,13 @@ public class FotoStorageLocal implements IFotoStorage {
 	}
 
 	@Override
-	public boolean excluir(String foto) throws IOException {
-		return Files.deleteIfExists(local.resolve(foto));
+	public String url(String foto) {
+		return "http://localhost:8080/brewer/fotos/cerveja/".concat(foto);
 	}
 
 	@Override
-	public boolean excluirThumb(String foto) throws IOException {
-		return Files.deleteIfExists(local.resolve(PREFIX_DOT_THUMBNAIL + foto));
+	public String urlThumb(String foto) {
+		return "http://localhost:8080/brewer/fotos/cerveja/".concat(FotoStorage.PREFIX_DOT_THUMBNAIL + foto);
 	}
 
 }

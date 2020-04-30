@@ -12,8 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,6 +29,7 @@ import com.mj.brewer.model.filter.ClienteFilter;
 import com.mj.brewer.repository.Estados;
 import com.mj.brewer.service.ClienteService;
 import com.mj.brewer.service.exception.ClienteJaCadastradoException;
+import com.mj.brewer.service.exception.ImpossivelExcluirEntidade;
 import com.mysql.jdbc.StringUtils;
 
 @Controller
@@ -62,7 +65,17 @@ public class ClientesController {
 		return mv;
 	}
 
-	@PostMapping()
+	@GetMapping("/{id}")
+	public ModelAndView editar(@PathVariable("id") Long id) {
+		Cliente cliente = clienteService.buscarComEndereco(id);
+
+		ModelAndView mv = cadastro(cliente);
+		mv.addObject("cliente", cliente);
+
+		return mv;
+	}
+
+	@PostMapping
 	public ModelAndView salvar(@Valid Cliente cliente, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
 		// se encontrou algum erro de validação
@@ -79,6 +92,18 @@ public class ClientesController {
 
 		redirectAttributes.addFlashAttribute("mensagem", "Cliente cadastrado com sucesso!");
 		return new ModelAndView("redirect:/clientes/novo");
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> excluir(@PathVariable("id") Cliente cliente) {
+
+		try {
+			clienteService.excluir(cliente);
+			return ResponseEntity.ok(cliente.getNome() + " excluído com sucesso!");
+		} catch (ImpossivelExcluirEntidade e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+
 	}
 
 	@GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

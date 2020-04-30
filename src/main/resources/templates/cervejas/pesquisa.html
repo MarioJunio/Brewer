@@ -193,10 +193,8 @@
 						<td class="text-center"><img
 							th:if="${not #strings.isEmpty(c.foto)}"
 							height="45px"
-							th:src="@{/fotos/cerveja/thumbnail.{foto}(foto=${c.foto})}"
-							th:alt="${c.nome}" /> <i
-							th:if="${#strings.isEmpty(c.foto)}"
-							class="fas fa-beer fa-2x bw-beer-default-icon"></i></td>
+							th:src="${c.url}"
+							th:alt="${c.nome}" /></td>
 						<td th:text="${c.sku}"></td>
 						<td th:text="${c.nome}"></td>
 						<td th:text="${c.sabor.descricao}"></td>
@@ -208,6 +206,7 @@
 						<td
 							style="position: relative; right: 10px;"
 							class="text-center"><a
+							data:delete-message="'Você confirma a exclusão desta cerveja, após isso não poderá ser recuperada!'"
 							data:url="@{/cervejas/{id}(id=${c.id})}"
 							data:id="${c.id}"
 							data:objeto="${c.nome}"

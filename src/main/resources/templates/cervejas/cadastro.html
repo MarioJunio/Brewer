@@ -22,8 +22,11 @@
 		<div class="row">
 
 			<div class="col-xs-10">
-				<span class="bw-header-title text-center" th:if="${cerveja.nova}">Cadastrar cerveja</span>
-				<span class="bw-header-title text-center" th:unless="${cerveja.nova}">Edição [[${cerveja.nome}]]</span>
+				<span
+					class="bw-header-title text-center"
+					th:if="${cerveja.nova}">Cadastrar cerveja</span> <span
+					class="bw-header-title text-center"
+					th:unless="${cerveja.nova}">Edição [[${cerveja.nome}]]</span>
 			</div>
 
 			<div class="col-xs-2 text-right">
@@ -259,7 +262,9 @@
 						type="hidden"
 						th:field="*{foto}" /> <input
 						type="hidden"
-						th:field="*{contentType}" />
+						th:field="*{contentType}" /> <input
+						type="hidden"
+						th:field="*{url}" />
 
 					<div
 						id="upload-drop"

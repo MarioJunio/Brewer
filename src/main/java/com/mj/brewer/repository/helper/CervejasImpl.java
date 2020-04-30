@@ -1,6 +1,8 @@
 package com.mj.brewer.repository.helper;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -84,6 +86,29 @@ public class CervejasImpl implements CervejasQueries {
 		query.setParameter("filtro", nomeOuSKU.toLowerCase() + "%");
 
 		return query.getResultList();
+	}
+
+	@Override
+	public BigDecimal calcularValorTotalEstoque() {
+		String jpql = "select sum(a.valor * a.quantidadeEstoque) from Cerveja a";
+
+		return (BigDecimal) Optional.ofNullable(entityManager.createQuery(jpql, BigDecimal.class).getSingleResult())
+				.orElse(BigDecimal.ZERO);
+	}
+
+	@Override
+	public Long itensNoEstoque() {
+		Criteria criteria = entityManager.unwrap(Session.class).createCriteria(Cerveja.class);
+		criteria.setProjection(Projections.sum(Cerveja.QUANTIDADE_ESTOQUE));
+		return (Long) Optional.ofNullable(criteria.uniqueResult()).orElse(0L);
+	}
+
+	@Override
+	public boolean subtrairEstoque(Cerveja cerveja, int estoqueAbater) {
+		Query query = entityManager.createQuery("update Cerveja a set a.quantidadeEstoque = a.quantidadeEstoque - :quantidade_abater where a.id = :id");
+		query.setParameter("quantidade_abater", estoqueAbater);
+		query.setParameter("id", cerveja.getId());
+		return query.executeUpdate() > 0;
 	}
 
 }

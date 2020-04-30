@@ -5,21 +5,21 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.mj.brewer.event.CervejaEventListener;
+import com.mj.brewer.event.VendaEventListener;
 import com.mj.brewer.service.CervejaService;
-import com.mj.brewer.storage.FotoStorageLocal;
-import com.mj.brewer.storage.IFotoStorage;
+import com.mj.brewer.storage.FotoStorage;
 
 @Configuration
-@ComponentScan(basePackageClasses = CervejaService.class)
+@ComponentScan(basePackageClasses = {CervejaService.class, FotoStorage.class})
 public class ServiceConfig {
 
 	@Bean
-	public IFotoStorage fotoStorage() {
-		return new FotoStorageLocal();
+	public CervejaEventListener cervejaEventListener() {
+		return new CervejaEventListener();
 	}
 	
 	@Bean
-	public CervejaEventListener cervejaEventListener() {
-		return new CervejaEventListener();
+	public VendaEventListener vendaEventListener() {
+		return new VendaEventListener();
 	}
 }

@@ -31,7 +31,7 @@ public class Cidade implements Serializable {
 	private String nome;
 
 	@NotNull(message = "Estado é obrigatório")
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "estado_id")
 	@JsonIgnore
 	private Estado estado;
@@ -71,6 +71,14 @@ public class Cidade implements Serializable {
 
 	public boolean temEstado() {
 		return estado != null;
+	}
+
+	public boolean isNovo() {
+		return id == null;
+	}
+
+	public boolean isEdicao() {
+		return id != null;
 	}
 
 	@Override

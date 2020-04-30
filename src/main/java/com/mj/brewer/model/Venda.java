@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +78,7 @@ public class Venda implements Serializable {
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "venda")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "venda", orphanRemoval = true)
 	private List<ItemVenda> itens = new ArrayList<>();
 
 	@Transient
@@ -88,6 +89,35 @@ public class Venda implements Serializable {
 
 	@Transient
 	private LocalTime horaDaEntrega;
+
+	public boolean isNova() {
+		return id == null;
+	}
+
+	public boolean isEdicao() {
+		return id != null;
+	}
+
+	public String getCriacao() {
+		final String HOJE = "Hoje";
+		final String ONTEM = "Ontem";
+
+		if (dataCriacao == null)
+			return HOJE;
+
+		long days = ChronoUnit.DAYS.between(dataCriacao.toLocalDate(), LocalDate.now());
+
+		if (days == 0)
+			return HOJE;
+		else if (days == 1)
+			return ONTEM;
+		else
+			return String.format("%d dias atrás", days);
+	}
+
+	public boolean isCancelada() {
+		return statusVenda == StatusVenda.CANCELADA;
+	}
 
 	public Long getId() {
 		return id;

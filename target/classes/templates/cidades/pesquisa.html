@@ -19,7 +19,9 @@
 				<span class="bw-header-title text-center">Pesquisa de cidades</span>
 			</div>
 
-			<div class="col-xs-2 text-right" sec:authorize="hasAuthority('CADASTRO_CIDADE')">
+			<div
+				class="col-xs-2 text-right"
+				sec:authorize="hasAuthority('CADASTRO_CIDADE')">
 
 				<a
 					class="btn btn-default bw-btn-header"
@@ -111,9 +113,18 @@
 						<td
 							sec:authorize="hasAuthority('CADASTRO_CIDADE')"
 							style="position: relative; right: 10px;"
-							class="text-center"><a th:href="@{/}"><i class="fas fa-trash-alt"></i></a> <a
+							class="text-center"><a
+							class="js-tooltip js-btn-excluir"
+							title="Excluir"
+							th:href="@{/}"
+							data:delete-message="'Você confirma a exclusão desta cidade após isso não poderá ser recuperada!'"
+							data:url="@{/cidades/{id}(id=${c.id})}"
+							data:id="${c.id}"
+							data:objeto="${c.nome}"><i class="fas fa-trash-alt"></i></a> <a
 							style="position: relative; left: 15px;"
-							th:href="@{/}"><i class="fas fa-edit"></i></a></td>
+							class="js-tooltip"
+							title="Editar"
+							th:href="@{/cidades/{id}(id=${c.id})}"><i class="fas fa-edit"></i></a></td>
 					</tr>
 
 				</tbody>
@@ -127,6 +138,13 @@
 		<brewer:pagination pagina="${pagina}" />
 
 	</section>
+
+	<th:block layout:fragment="js-extra">
+
+		<script
+			type="text/javascript"
+			th:src="@{/scripts/pesquisa-exclusao.js}"></script>
+	</th:block>
 
 </body>
 </html>

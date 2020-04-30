@@ -18,7 +18,7 @@ import org.thymeleaf.context.Context;
 
 import com.mj.brewer.model.ItemVenda;
 import com.mj.brewer.model.Venda;
-import com.mj.brewer.storage.IFotoStorage;
+import com.mj.brewer.storage.FotoStorage;
 
 @Component
 public class Mailer {
@@ -30,7 +30,7 @@ public class Mailer {
 	private TemplateEngine thymeleaf;
 
 	@Autowired
-	private IFotoStorage fotoStorage;
+	private FotoStorage fotoStorage;
 
 	@Async
 	public void enviar(Venda venda) throws IOException {

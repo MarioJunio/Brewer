@@ -90,9 +90,16 @@
 						<td th:text="${c.nome}"></td>
 						<td
 							style="position: relative; right: 10px;"
-							class="text-right"><a th:href="@{/}"><i class="fas fa-trash-alt"></i></a> <a
+							class="text-right"><a
+							th:href="@{/}"
+							title="Exluir"
+							data:delete-message="'Você confirma a exclusão deste estilo após isso não poderá ser recuperado!'"
+							data:url="@{/estilos/{id}(id=${c.id})}"
+							data:id="${c.id}"
+							data:objeto="${c.nome}"
+							class="js-tooltip js-btn-excluir"><i class="fas fa-trash-alt"></i></a> <a
 							style="position: relative; left: 15px;"
-							th:href="@{/}"><i class="fas fa-edit"></i></a></td>
+							th:href="@{/estilos/{id}(id=${c.id})}"><i class="fas fa-edit"></i></a></td>
 					</tr>
 
 				</tbody>
@@ -106,6 +113,12 @@
 		<brewer:pagination pagina="${pagina}" />
 
 	</section>
+	
+	<th:block layout:fragment="js-extra">
 
+		<script
+			type="text/javascript"
+			th:src="@{/scripts/pesquisa-exclusao.js}"></script>
+	</th:block>
 </body>
 </html>

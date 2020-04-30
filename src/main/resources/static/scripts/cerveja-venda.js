@@ -14,7 +14,7 @@ Brewer.VendaCerveja = (function() {
 
 		this.inpFrete.on('keyup', recalcularTotalVenda.bind(this));
 		this.inpDesconto.on('keyup', recalcularTotalVenda.bind(this));
-		
+
 		recalcularTotalVenda.call(this);
 	}
 
@@ -22,6 +22,10 @@ Brewer.VendaCerveja = (function() {
 		var total = numeral($('.js-venda-total').val()).value();
 		var frete = numeral(this.inpFrete.val()).value();
 		var desconto = numeral(this.inpDesconto.val()).value();
+
+		console.log('total', total);
+		console.log('frete', frete);
+		console.log('desconto', desconto);
 
 		total = !total ? 0 : total;
 		frete = !frete ? 0 : frete;
@@ -41,7 +45,7 @@ Brewer.VendaCerveja = (function() {
 			this.lbTotalVenda.addClass('default-title');
 
 		this.lbTotalVenda.text('R$ ' + Brewer.formatarMoeda(total));
-		
+
 	}
 
 	return VendaCerveja;

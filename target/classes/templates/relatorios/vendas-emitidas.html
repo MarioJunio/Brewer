@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html
+	lang="pt"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:brewer="http://www.brewer.algaworks.com.br"
+	layout:decorator="~{layout/DefaultLayout.html}">
+<head>
+<title>Vendas Emitidas</title>
+</head>
+
+<body>
+	<div layout:fragment="content-title">
+
+		<div class="row">
+
+			<div class="col-xs-10">
+				<span class="bw-header-title text-center">Relatório de Vendas Emitidas</span>
+			</div>
+
+			<div class="col-xs-2 text-right">
+
+				<a
+					class="btn btn-default bw-btn-header"
+					th:href="@{/cervejas/cadastro}"
+					role="button"><i class="fas fa-plus fa-lg"></i> </a>
+			</div>
+
+		</div>
+
+	</div>
+
+	<section layout:fragment="content-body">
+
+		<div class="bw-filter-panel">
+
+			<brewer:message />
+
+			<form
+				th:object="${relatorioVendasEmitidasFilter}"
+				th:action="@{/reports/vendas-emitidas/generate}"
+				enctype="application/x-www-form-urlencoded"
+				method="get">
+
+				<brewer:validation />
+
+				<div class="row">
+
+					<div class="form-group col-sm-12">
+
+						<label
+							for="data-criacao-inicial"
+							class="control-label">Período</label>
+
+						<div class="form-inline">
+
+							<input
+								id="data-inicial"
+								placeholder="00/00/0000"
+								th:field="*{dataInicio}"
+								autocomplete="off"
+								type="text"
+								class="form-control js-date" /> <span style="margin: 5px;">até</span> <input
+								placeholder="00/00/0000"
+								id="data-final"
+								autocomplete="off"
+								th:field="*{dataFim}"
+								type="text"
+								class="form-control js-date" />
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12">
+						<button
+							type="submit"
+							class="btn btn-default btn-primary">Gerar</button>
+					</div>
+				</div>
+
+			</form>
+
+		</div>
+
+	</section>
+
+</body>
+</html>

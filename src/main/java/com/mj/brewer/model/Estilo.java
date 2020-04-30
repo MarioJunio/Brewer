@@ -37,7 +37,6 @@ public class Estilo implements Serializable {
 	private List<Cerveja> cervejas;
 
 	public Estilo() {
-
 	}
 
 	public Estilo(Long id) {
@@ -60,6 +59,14 @@ public class Estilo implements Serializable {
 		this.nome = nome;
 	}
 
+	public boolean isNovo() {
+		return id == null;
+	}
+	
+	public boolean isEdicao() {
+		return id != null;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

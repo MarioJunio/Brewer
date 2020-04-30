@@ -77,6 +77,14 @@ public class Cliente implements Serializable {
 		this.cpfCnpj = tipoPessoa.formatar(this.cpfCnpj);
 	}
 
+	public boolean isNovo() {
+		return id == null;
+	}
+
+	public boolean isEdicao() {
+		return id != null;
+	}
+
 	public Long getId() {
 		return id;
 	}

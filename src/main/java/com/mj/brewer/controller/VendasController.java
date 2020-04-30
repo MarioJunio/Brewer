@@ -7,11 +7,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -80,7 +82,8 @@ public class VendasController {
 	@GetMapping("/nova")
 	public ModelAndView novaVenda(Venda venda) {
 		ModelAndView mv = new ModelAndView(VIEW_NOVA_VENDA);
-		mv.addObject("total", Optional.ofNullable(venda.getValorTotal()).orElse(BigDecimal.ZERO));
+		mv.addObject("venda", venda);
+		mv.addObject("total", Optional.ofNullable(venda.getSubTotal()).orElse(BigDecimal.ZERO));
 
 		if (venda.getUuid() == null)
 			venda.setUuid(UUID.randomUUID());
@@ -88,6 +91,33 @@ public class VendasController {
 			mv.addObject("itens", tabelasItemVenda.getItens(venda.getUuid().toString()));
 
 		return mv;
+	}
+
+	@GetMapping("/cancelar/{id}")
+	public ModelAndView cancelar(@PathVariable("id") Venda venda, @AuthenticationPrincipal UsuarioAutenticado usuarioAutenticado,
+			HttpServletResponse response, RedirectAttributes redirectAttributes) {
+
+		boolean isAdmin = usuarioAutenticado.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"));
+
+		if (venda.getVendedor().equals(usuarioAutenticado.getUsuario()) || isAdmin) {
+			venda.setStatusVenda(StatusVenda.CANCELADA);
+			vendaService.salvar(venda);
+		} else {
+			return new ModelAndView("redirect:/403");
+		}
+
+		return new ModelAndView("redirect:/vendas");
+	}
+
+	@GetMapping("/{id}")
+	public ModelAndView editar(@PathVariable("id") Long id) {
+		Venda venda = vendaService.buscarComItens(id);
+
+		venda.setUuid(UUID.randomUUID());
+		for (ItemVenda iv : venda.getItens())
+			tabelasItemVenda.adicionarItem(venda.getUuid().toString(), iv.getCerveja(), iv.getQuantidade());
+
+		return novaVenda(venda);
 	}
 
 	@PostMapping(value = "/nova", params = "salvar")
@@ -156,32 +186,37 @@ public class VendasController {
 	}
 
 	@PostMapping("/item")
-	public ModelAndView adicionarItem(Long cervejaID, String uuid) {
+	public ModelAndView adicionarItem(Long cervejaID, String uuid, Long vendaId) {
+		Venda venda = vendaService.buscar(vendaId).orElse(new Venda());
 		Optional<Cerveja> optional = cervejas.findById(cervejaID);
 
 		// verifica se a cerveja existe
 		if (optional.isPresent())
 			tabelasItemVenda.adicionarItem(uuid, optional.get(), BigDecimal.ONE);
 
-		return mvItemVenda(uuid);
+		return mvItemVenda(uuid, venda);
 	}
 
 	@PutMapping("/item/{cervejaID}")
-	public ModelAndView atualizarItem(String uuid, @PathVariable("cervejaID") Cerveja cerveja, int quantidade) {
-
+	public ModelAndView atualizarItem(@PathVariable("cervejaID") Cerveja cerveja, String uuid, int quantidade, Long vendaId) {
+		System.out.println("Venda ID: " + vendaId);
+		Venda venda = vendaService.buscar(vendaId).orElse(new Venda());
+		
 		if (cerveja != null)
 			tabelasItemVenda.atualizarQuantidadeItem(uuid, cerveja, BigDecimal.valueOf(quantidade));
 
-		return mvItemVenda(uuid);
+		return mvItemVenda(uuid, venda);
 	}
 
-	@DeleteMapping("/item/{uuid}/{cervejaID}")
-	public ModelAndView deletarItem(@PathVariable String uuid, @PathVariable("cervejaID") Cerveja cerveja) {
-
+	@DeleteMapping("/item/{uuid}/{cervejaID}/{vendaId}")
+	public ModelAndView deletarItem(@PathVariable String uuid, @PathVariable("cervejaID") Cerveja cerveja, @PathVariable("vendaId") Long vendaId) {
+		System.out.println("Venda ID: " + vendaId);
+		Venda venda = vendaService.buscar(vendaId).orElse(new Venda());
+		
 		if (cerveja != null)
 			tabelasItemVenda.excluirItem(uuid, cerveja);
 
-		return mvItemVenda(uuid);
+		return mvItemVenda(uuid, venda);
 	}
 
 	@GetMapping("/mostrarCarrinho/{uuid}")
@@ -190,8 +225,9 @@ public class VendasController {
 		return tabelasItemVenda.getItens(uuid);
 	}
 
-	private ModelAndView mvItemVenda(String uuid) {
+	private ModelAndView mvItemVenda(String uuid, Venda venda) {
 		ModelAndView mv = new ModelAndView(VIEW_NOVA_VENDA_ITEM);
+		mv.addObject("venda", venda);
 		mv.addObject("itens", tabelasItemVenda.getItens(uuid));
 		mv.addObject("total", tabelasItemVenda.getValorTotal(uuid));
 		return mv;

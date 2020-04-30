@@ -7,11 +7,11 @@ import com.mj.brewer.dto.FotoDTO;
 
 public class FotoStorageRunnable implements Runnable {
 
-	private IFotoStorage fotoStorage;
+	private FotoStorage fotoStorage;
 	private DeferredResult<FotoDTO> result;
 	private MultipartFile file;
 
-	public FotoStorageRunnable(MultipartFile file, DeferredResult<FotoDTO> result, IFotoStorage fotoStorage) {
+	public FotoStorageRunnable(MultipartFile file, DeferredResult<FotoDTO> result, FotoStorage fotoStorage) {
 		super();
 		this.fotoStorage = fotoStorage;
 		this.result = result;
@@ -20,8 +20,8 @@ public class FotoStorageRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		String novoNome = fotoStorage.salvarTemporariamente(file);
-		result.setResult(new FotoDTO(novoNome, file.getOriginalFilename(), file.getContentType()));
+		String fotoRenomeada = fotoStorage.salvar(new MultipartFile[] { file });
+		result.setResult(new FotoDTO(fotoRenomeada, file.getOriginalFilename(), file.getContentType(), fotoStorage.url(fotoRenomeada)));
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.mj.brewer.repository.helper;
 
+import java.util.Optional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -66,6 +68,26 @@ public class ClientesImpl implements ClientesQueries {
 
 		}
 
+	}
+
+	@Override
+	public Cliente buscarComEndereco(Long id) {
+		Criteria criteria = entityManager.unwrap(Session.class).createCriteria(Cliente.class);
+		criteria.createAlias("endereco.cidade", "cid", JoinType.LEFT_OUTER_JOIN);
+		criteria.createAlias("cid.estado", "est", JoinType.LEFT_OUTER_JOIN);
+
+		// filtro por id do cliente a ser encontrado
+		criteria.add(Restrictions.eq(Cliente.ID, id));
+
+		return (Cliente) criteria.uniqueResult();
+	}
+
+	@Override
+	public Long quantidadeClientes() {
+		Criteria criteria = entityManager.unwrap(Session.class).createCriteria(Cliente.class);
+		criteria.setProjection(Projections.rowCount());
+		
+		return (Long) Optional.ofNullable(criteria.uniqueResult()).orElse(0L);
 	}
 
 }

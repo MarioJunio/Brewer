@@ -6,6 +6,7 @@ Brewer.CervejaUploadFoto = (function() {
 
 		this.fieldNome = $('input[name=foto]');
 		this.fieldContentType = $('input[name=contentType]');
+		this.fieldUrl = $('input[name=url]');
 
 		this.containerFoto = $('.js-foto-cerveja-container');
 		this.fotoUpload = $('.js-foto-cerveja-upload');
@@ -38,7 +39,8 @@ Brewer.CervejaUploadFoto = (function() {
 			onCompleteUpload.call(this, {
 				nome : this.fieldNome.val(),
 				nomeOriginal : getNomeOriginal(this.fieldNome.val()),
-				contentType : this.fieldContentType.val()
+				contentType : this.fieldContentType.val(),
+				url: this.fieldUrl.val()
 			});
 			
 		} else
@@ -58,6 +60,7 @@ Brewer.CervejaUploadFoto = (function() {
 		// atribui os dados da resposta aos campos ocultos
 		this.fieldNome.val(response.nome);
 		this.fieldContentType.val(response.contentType);
+		this.fieldUrl.val(response.url);
 
 		var cervejaId = $('.js-cerveja-id').val();
 		var foto = null;
@@ -70,7 +73,8 @@ Brewer.CervejaUploadFoto = (function() {
 
 		var htmlTemplate = this.template({
 			nome : foto,
-			nomeOriginal : response.nomeOriginal
+			nomeOriginal : response.nomeOriginal,
+			url: response.url
 		});
 
 		// esconde o campo para fazer upload da foto
@@ -111,6 +115,7 @@ Brewer.CervejaUploadFoto = (function() {
 
 			this.fieldNome.val('');
 			this.fieldContentType.val('');
+			this.fieldUrl.val('');
 
 			this.fotoCervejaHtml.remove();
 			this.fotoUpload.removeClass('hidden');

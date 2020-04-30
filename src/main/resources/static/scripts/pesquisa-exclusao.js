@@ -14,12 +14,13 @@ Brewer.PesquisaExclusao = (function() {
 		e.preventDefault();
 		
 		var btnClicked = $(e.currentTarget);
+		var deleteMessage = btnClicked.data('delete-message');
 		var url = btnClicked.data('url');
 		var objeto = btnClicked.data('objeto');
 		
 		swal({
 			  title: 'Você tem certeza?',
-			  text: "Você confirma a exclusão desta cerveja, após isso não poderá ser recuperada!",
+			  text: deleteMessage,
 			  type: 'question',
 			  showCancelButton: true,
 			  confirmButtonColor: '#3085d6',

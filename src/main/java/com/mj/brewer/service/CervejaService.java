@@ -1,5 +1,6 @@
 package com.mj.brewer.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,5 +54,20 @@ public class CervejaService {
 			throw new ImpossivelExcluirEntidade(
 					String.format("Não foi possível excluir \'%s\', pois ela já foi vendida!", cerveja.getNome()));
 		}
+	}
+	
+	@Transactional(readOnly = true)
+	public BigDecimal valorTotalEstoque() {
+		return cervejas.calcularValorTotalEstoque();
+	}
+	
+	@Transactional(readOnly = true)
+	public Long itensNoEstoque() {
+		return cervejas.itensNoEstoque();
+	}
+	
+	@Transactional
+	public boolean subtrairEstoque(Cerveja cerveja, int estoqueAbater) {
+		return cervejas.subtrairEstoque(cerveja, estoqueAbater);
 	}
 }

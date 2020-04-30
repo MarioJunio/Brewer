@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,7 @@ import com.mj.brewer.model.filter.UsuarioFilter;
 import com.mj.brewer.repository.Grupos;
 import com.mj.brewer.service.UsuarioService;
 import com.mj.brewer.service.exception.EmailJaCadastradoException;
+import com.mj.brewer.service.exception.ImpossivelExcluirEntidade;
 
 @Controller
 @RequestMapping("/usuarios")
@@ -69,8 +72,6 @@ public class UsuariosController {
 	@PostMapping
 	public ModelAndView salvar(@Valid Usuario usuario, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-		System.out.println(usuario.toString());
-		
 		if (bindingResult.hasErrors())
 			return novo(usuario);
 
@@ -83,6 +84,18 @@ public class UsuariosController {
 		}
 
 		return new ModelAndView("redirect:/usuarios/novo");
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> excluir(@PathVariable("id") Usuario usuario) {
+		
+		try {
+			usuarioService.excluir(usuario);
+			return ResponseEntity.ok(usuario.getNome() + " excluído com sucesso!");
+		} catch (ImpossivelExcluirEntidade e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+		
 	}
 
 	@PutMapping("/alterarStatus")

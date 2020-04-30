@@ -4,6 +4,7 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	xmlns:brewer="http://www.brewer.algaworks.com.br"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 	layout:decorator="~{layout/DefaultLayout.html}">
 <head>
 <title>Pesquisa de vendas</title>
@@ -158,6 +159,8 @@
 
 		</div>
 
+		<brewer:message />
+
 		<div class="table-responsive bw-data-table-panel col-sm-12">
 
 			<table
@@ -190,8 +193,15 @@
 						<td
 							style="position: relative; right: 10px;"
 							class="text-center"><a
-							style="position: relative; left: 15px;"
-							th:href="@{/}"><i class="fas fa-edit"></i></a></td>
+							style="position: relative"
+							class="js-tooltip"
+							title="Editar"
+							th:href="@{/vendas/{id}(id=${v.id})}"><i class="fas fa-edit"></i></a> <a
+							style="position: relative; margin-left: 15px;"
+							class="js-tooltip"
+							title="Cancelar"
+							th:if="${(#authorization.expression('hasAuthority(''ADMIN'')') or (#authentication.principal.usuario == v.vendedor)) and (v.statusVenda.descricao != 'Cancelada')}"
+							th:href="@{/vendas/cancelar/{id}(id=${v.id})}"><i class="fas fa-ban"></i></a></td>
 					</tr>
 
 				</tbody>

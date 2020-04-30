@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ import com.mj.brewer.repository.Cidades;
 import com.mj.brewer.repository.Estados;
 import com.mj.brewer.service.CidadeService;
 import com.mj.brewer.service.exception.CidadeJaCadastradaException;
+import com.mj.brewer.service.exception.ImpossivelExcluirEntidade;
 
 @Controller
 @RequestMapping("/cidades")
@@ -48,6 +50,7 @@ public class CidadesController {
 	@GetMapping("/novo")
 	public ModelAndView novo(Cidade cidade) {
 		ModelAndView mv = new ModelAndView(VIEW_CADASTRO);
+		mv.addObject("cidade", cidade);
 		mv.addObject("estados", estados.findAll());
 
 		return mv;
@@ -71,9 +74,10 @@ public class CidadesController {
 
 	@CacheEvict(value = "cidades", key = "#cidade.estado.id", condition = "#cidade.temEstado()")
 	@PostMapping
-	public ModelAndView salvar(@Validated Cidade cidade, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
+	public ModelAndView salvar(@Validated Cidade cidade, BindingResult bindingResult, RedirectAttributes redirectAttributes)
+			throws Exception {
 
-		if (bindingResult.hasErrors()) 
+		if (bindingResult.hasErrors())
 			return novo(cidade);
 
 		try {
@@ -85,6 +89,22 @@ public class CidadesController {
 		}
 
 		return new ModelAndView("redirect:/cidades");
+	}
+
+	@GetMapping("/{id}")
+	public ModelAndView editar(@PathVariable("id") Long id) {
+		return novo(cidadeService.buscar(id).get());
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> excluir(@PathVariable("id") Long id) {
+
+		try {
+			Cidade cidade = cidadeService.excluir(id);
+			return ResponseEntity.ok(cidade.getNome() + " foi excluída!");
+		} catch (ImpossivelExcluirEntidade e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 
 }

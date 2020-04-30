@@ -108,9 +108,15 @@
 						<td th:text="|${c.endereco.cidade.nome} - ${c.endereco.cidade.estado.uf}|"></td>
 						<td
 							style="position: relative; right: 10px;"
-							class="text-center"><a th:href="@{/}"><i class="fas fa-trash-alt"></i></a> <a
+							class="text-center"><a
+							data:delete-message="'Você confirma a exclusão deste cliente após isso não poderá ser recuperado!'"
+							data:url="@{/clientes/{id}(id=${c.id})}"
+							data:id="${c.id}"
+							data:objeto="${c.nome}"
+							class="js-tooltip js-btn-excluir"
+							th:href="@{/}"><i class="fas fa-trash-alt"></i></a> <a
 							style="position: relative; left: 15px;"
-							th:href="@{/}"><i class="fas fa-edit"></i></a></td>
+							th:href="@{/clientes/{id}(id=${c.id})}"><i class="fas fa-edit"></i></a></td>
 					</tr>
 
 				</tbody>
@@ -124,6 +130,13 @@
 		<brewer:pagination pagina="${pagina}" />
 
 	</section>
+
+	<th:block layout:fragment="js-extra">
+
+		<script
+			type="text/javascript"
+			th:src="@{/scripts/pesquisa-exclusao.js}"></script>
+	</th:block>
 
 </body>
 </html>

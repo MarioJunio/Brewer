@@ -7,5 +7,10 @@ import com.mj.brewer.model.Cliente;
 import com.mj.brewer.model.filter.ClienteFilter;
 
 public interface ClientesQueries {
-	public Page<Cliente> filtrar(ClienteFilter clienteFilter, Pageable pageable);
+	
+	Page<Cliente> filtrar(ClienteFilter clienteFilter, Pageable pageable);
+	
+	Cliente buscarComEndereco(Long id);
+	
+	Long quantidadeClientes();
 }

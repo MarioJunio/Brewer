@@ -1,5 +1,6 @@
 package com.mj.brewer.repository.helper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -11,8 +12,14 @@ import com.mj.brewer.model.filter.CervejaFilter;
 
 public interface CervejasQueries {
 
-	public Page<Cerveja> filtrar(CervejaFilter cervejaFilter, Pageable pageable);
+	Page<Cerveja> filtrar(CervejaFilter cervejaFilter, Pageable pageable);
 	
-	public List<CervejaDTO> filtrar(String nomeOuSKU);
+	List<CervejaDTO> filtrar(String nomeOuSKU);
+	
+	BigDecimal calcularValorTotalEstoque();
+	
+	Long itensNoEstoque();
+	
+	boolean subtrairEstoque(Cerveja cerveja, int estoqueAbater);
 	
 }

@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -24,9 +25,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.mj.brewer.model.listener.CervejaListener;
 import com.mj.brewer.validation.SKU;
 import com.mysql.jdbc.StringUtils;
 
+@EntityListeners(CervejaListener.class)
 @Entity
 @Table(name = "cerveja")
 public class Cerveja implements Serializable {
@@ -101,6 +104,12 @@ public class Cerveja implements Serializable {
 
 	@Column(name = "content_type")
 	private String contentType;
+
+	@javax.persistence.Transient
+	private String url;
+
+	@javax.persistence.Transient
+	private String urlThumb;
 
 	public String getContentType() {
 		return contentType;
@@ -219,6 +228,26 @@ public class Cerveja implements Serializable {
 
 	public boolean temFoto() {
 		return !StringUtils.isNullOrEmpty(foto);
+	}
+
+	public BigDecimal getValorEstoque() {
+		return valor.multiply(BigDecimal.valueOf(quantidadeEstoque));
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getUrlThumb() {
+		return urlThumb;
+	}
+
+	public void setUrlThumb(String urlThumb) {
+		this.urlThumb = urlThumb;
 	}
 
 	@Override

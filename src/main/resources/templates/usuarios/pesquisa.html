@@ -80,7 +80,7 @@
 							<th:block th:each="grupo : ${grupos}">
 
 								<div class="checkbox checkbox-inline">
-								
+
 									<input
 										th:field="*{grupos}"
 										th:value="${grupo.codigo}"
@@ -185,16 +185,26 @@
 						</td>
 						<td th:text="${u.nome}"></td>
 						<td th:text="${u.email}"></td>
+
 						<td><th:block
-								th:each="grupo : ${grupos}"
+								th:each="grupo : ${u.grupos}"
 								th:text="|${grupo.nome}${grupoStat.last ? '' : ', '}|" /></td>
+
 						<td th:with="status=${u.ativo ? 'ATIVO' : 'INATIVO'},label=${u.ativo ? 'label-success' : 'label-danger'}"><span
 							th:class="|label ${label}|"
 							th:text="${status}"></span></td>
+
 						<td
 							sec:authorize="hasAuthority('ADMIN')"
 							style="position: relative; right: 10px;"
-							class="text-center"><a th:href="@{/}"><i class="fas fa-trash-alt"></i></a> <a
+							class="text-center"><a
+							th:href="@{/}"
+							th:if="${#authentication.principal.usuario != u}"
+							data:delete-message="'Você confirma a exclusão deste usuário após isso não poderá ser recuperado!'"
+							data:url="@{/usuarios/{id}(id=${u.codigo})}"
+							data:id="${u.codigo}"
+							data:objeto="${u.nome}"
+							class="js-tooltip js-btn-excluir"><i class="fas fa-trash-alt"></i></a> <a
 							style="position: relative; left: 15px;"
 							th:href="@{/usuarios/{id}(id=${u.codigo})}"><i class="fas fa-edit"></i></a></td>
 					</tr>
@@ -216,6 +226,10 @@
 		<script
 			type="text/javascript"
 			th:src="@{/scripts/usuario-status.js}"></script>
+
+		<script
+			type="text/javascript"
+			th:src="@{/scripts/pesquisa-exclusao.js}"></script>
 
 	</th:block>
 

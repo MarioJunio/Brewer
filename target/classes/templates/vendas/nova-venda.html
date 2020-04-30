@@ -19,7 +19,11 @@
 	<div class="row">
 
 		<div class="col-xs-10">
-			<span class="bw-header-title text-center">Nova venda</span>
+			<span
+				class="bw-header-title text-center"
+				th:if="${venda.nova}" th:text="#{venda.cadastro.titulo}">Nova venda</span> <span
+				class="bw-header-title text-center"
+				th:if="${venda.edicao}" th:text="#{venda.edicao.titulo(${venda.id})}">Editando venda [[${venda.id}]]</span>
 		</div>
 
 		<div class="col-xs-2 text-right">
@@ -50,6 +54,9 @@
 
 			<input
 				type="hidden"
+				th:field="*{id}"
+				class="js-venda-id" /> <input
+				type="hidden"
 				name="uuid"
 				class="js-input-uuid"
 				th:field="*{uuid}" /> <input
@@ -74,7 +81,9 @@
 						<div class="aw-box__icon">
 							<i class="fa  fa-tag  fa-3x"></i>
 						</div>
-						<div class="aw-box__value">Orçamento</div>
+						<div
+							class="aw-box__value"
+							th:text="*{statusVenda.descricao}">Orçamento</div>
 						<div class="aw-box__title">Status</div>
 					</div>
 				</div>
@@ -85,7 +94,9 @@
 							<i class="fa  fa-calendar  fa-3x"></i>
 						</div>
 						<div class="aw-box__value">
-							<span class="js-tooltip">Hoje</span>
+							<span
+								class="js-tooltip"
+								th:text="${venda.criacao}">Hoje</span>
 						</div>
 						<div class="aw-box__title">Criação</div>
 					</div>
@@ -115,6 +126,7 @@
 								class="btn  btn-default  js-tooltip"
 								type="button"
 								data-toggle="modal"
+								th:disabled="${venda.cancelada}"
 								data-target="#pesquisaRapidaClientes"
 								title="Pesquisa avançada">
 								<i class="glyphicon  glyphicon-search"></i>
@@ -133,6 +145,7 @@
 						<input
 							type="text"
 							maxlength="14"
+							th:disabled="${venda.cancelada}"
 							th:field="*{valorFrete}"
 							class="form-control  js-decimal  js-venda-frete"
 							id="valorFrete" />
@@ -148,6 +161,7 @@
 						<input
 							type="text"
 							maxlength="14"
+							th:disabled="${venda.cancelada}"
 							th:field="*{valorDesconto}"
 							class="form-control  js-decimal  js-venda-desconto"
 							id="valorDesconto" />
@@ -177,6 +191,7 @@
 								type="text"
 								class="form-control js-cerveja-pesquisa-rapida"
 								id="cerveja"
+								th:disabled="${venda.cancelada}"
 								data:uri="@{/cervejas/pesquisaRapida?nomeOuSKU}"
 								placeholder="Pesquise e adicione a cerveja pelo SKU ou nome"
 								autocomplete="off"
@@ -198,6 +213,7 @@
 								class="control-label"
 								for="dataEntrega">Data da entrega</label> <input
 								type="text"
+								th:disabled="${venda.cancelada}"
 								th:field="*{dataDaEntrega}"
 								class="form-control"
 								id="dataEntrega" />
@@ -208,6 +224,7 @@
 								class="control-label"
 								for="horarioEntrega">Horário de entrega</label> <input
 								type="text"
+								th:disabled="${venda.cancelada}"
 								th:field="*{horaDaEntrega}"
 								class="form-control"
 								id="horarioEntrega" />
@@ -221,6 +238,7 @@
 								id="dataEntrega"
 								th:field="*{observacao}"
 								rows="5"
+								th:disabled="${venda.cancelada}"
 								placeholder="Alguma observação para o entregador desse pedido?"></textarea>
 						</div>
 					</div>
@@ -228,6 +246,7 @@
 			</div>
 
 			<div
+				th:unless="${venda.cancelada}"
 				class="row"
 				style="clear: both">
 				<div class="col-lg-12">
@@ -236,7 +255,7 @@
 							type="submit"
 							class="btn  btn-primary js-btn-salvar"
 							data:acao="salvar">Salvar</button>
-							
+
 						<button
 							type="button"
 							class="btn  btn-primary  dropdown-toggle"
@@ -256,7 +275,7 @@
 						</ul>
 					</div>
 
-					<button class="btn  btn-danger">Cancelar</button>
+					<!-- <button class="btn  btn-danger">Cancelar</button> -->
 				</div>
 			</div>
 		</form>

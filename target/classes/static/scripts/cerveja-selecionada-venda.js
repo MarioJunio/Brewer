@@ -5,13 +5,17 @@ Brewer.CervejaSelecionadaVenda = (function() {
 	function CervejaSelecionadaVenda(cervejaAutocomplete) {
 		this.cervejaAutocomplete = cervejaAutocomplete;
 		this.tabelaItensVenda = $('.js-tabela-itens-venda');
+		this.vendaId = $('.js-venda-id').val();
 		this.uuid = $('.js-input-uuid').val();
-
+		
 		this.emitter = $({});
 		this.on = this.emitter.on.bind(this.emitter);
 	}
 
 	CervejaSelecionadaVenda.prototype.iniciar = function() {
+		// se for uma nova venda, então não existe um id associado a ela
+		this.vendaId = this.vendaId ? this.vendaId : 0; 
+		
 		this.cervejaAutocomplete.on('item-selecionado', adicionarAoCarrinho.bind(this));
 		onAtualizarItemVenda.call(this);
 	}
@@ -36,6 +40,7 @@ Brewer.CervejaSelecionadaVenda = (function() {
 			url : "item",
 			method : 'POST',
 			data : {
+				vendaId: this.vendaId,
 				cervejaID : item.id,
 				uuid : this.uuid
 			},
@@ -63,6 +68,7 @@ Brewer.CervejaSelecionadaVenda = (function() {
 			url : 'item/' + inp.data('cerveja_id'),
 			method : 'PUT',
 			data : {
+				vendaId: this.vendaId,
 				uuid : this.uuid,
 				quantidade : inp.val()
 			},
@@ -80,7 +86,7 @@ Brewer.CervejaSelecionadaVenda = (function() {
 		var btnExclusao = $(event.currentTarget);
 
 		$.ajax({
-			url : 'item/' + this.uuid + '/' + btnExclusao.data('cerveja-id'),
+			url : 'item/' + this.uuid + '/' + btnExclusao.data('cerveja-id') + '/' + this.vendaId,
 			method : 'DELETE',
 			success : onItemAdicionado.bind(this)
 		});

@@ -10,7 +10,8 @@
 
 <body>
 
-	<h1 layout:fragment="content-title">Cadastro de Estilo</h1>
+	<h1 layout:fragment="content-title" th:if="${estilo.novo}">Cadastro de Estilo</h1>
+	<h1 layout:fragment="content-title" th:if="${estilo.edicao}">Editando [[${estilo.nome}]]</h1>
 
 	<section layout:fragment="content-body">
 
@@ -24,6 +25,10 @@
 			class="form-vertical js-form-loading">
 
 			<th:block layout:include="/layout/fragments/cadastro-mensagens-validacao"></th:block>
+
+			<input
+				type="hidden"
+				th:field="*{id}" />
 
 			<div class="row">
 				<div
