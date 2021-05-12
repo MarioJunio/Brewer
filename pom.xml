@@ -40,7 +40,7 @@
 		<!-- Cache - Guava -->
 		<guava.version>23.0</guava.version>
 
-		<spring-security.version>4.2.7.RELEASE</spring-security.version>
+		<spring-security.version>5.2.10.RELEASE</spring-security.version>
 
 		<!-- Java Mail -->
 		<javax.mail.version>1.5.6</javax.mail.version>
